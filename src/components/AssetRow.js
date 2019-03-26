@@ -3,7 +3,10 @@ import styled from "styled-components";
 import Icon from "./Icon";
 import { ERC20Icon } from "dapparatus";
 import eth from "../assets/eth.svg";
-import { handleSignificantDecimals } from "../helpers/bignumber";
+import {
+  handleSignificantDecimals,
+  convertAmountFromRawNumber
+} from "../helpers/bignumber";
 
 const SAssetRow = styled.div`
   width: 100%;
@@ -37,7 +40,10 @@ const AssetRow = ({ asset, ...props }) => (
     </SAssetRowLeft>
     <SAssetRowRight>
       <SAssetBalance>
-        {`${handleSignificantDecimals(asset.balance, 8)} ${asset.symbol}`}
+        {`${handleSignificantDecimals(
+          convertAmountFromRawNumber(asset.balance, asset.decimals),
+          8
+        )} ${asset.symbol}`}
       </SAssetBalance>
     </SAssetRowRight>
   </SAssetRow>
