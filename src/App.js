@@ -11,7 +11,7 @@ import Header from "./components/Header";
 import Loader from "./components/Loader";
 import { fonts } from "./styles";
 import {
-  apiGetAccountBalances,
+  apiGetAccountAssets,
   apiGetGasPrices,
   apiGetAccountNonce
 } from "./helpers/api";
@@ -23,11 +23,9 @@ import {
 } from "./helpers/ethSigUtil";
 import { sanitizeHex } from "./helpers/utilities";
 import {
-  divide,
   convertAmountToRawNumber,
   convertStringToHex
 } from "./helpers/bignumber";
-import { parseAccountBalances } from "./helpers/parsers";
 
 const SLayout = styled.div`
   position: relative;
@@ -126,7 +124,7 @@ const STestButton = styled(Button)`
 const INITIAL_STATE = {
   webConnector: null,
   fetching: false,
-  network: "mainnet",
+  chainId: 1,
   showModal: false,
   pendingRequest: false,
   uri: "",
@@ -217,12 +215,11 @@ class App extends Component {
   };
 
   getAccountBalances = async () => {
-    const { address, network } = this.state;
+    const { address, chainId } = this.state;
     this.setState({ fetching: true });
 
     // get account balances
-    const { data } = await apiGetAccountBalances(address, network);
-    const assets = parseAccountBalances(data);
+    const assets = await apiGetAccountAssets(address, chainId);
 
     await this.setState({ fetching: false, address, assets });
   };
@@ -246,32 +243,50 @@ class App extends Component {
   };
 
   testSendTransaction = async () => {
-    const { webConnector, address, network } = this.state;
+    const { webConnector, address, chainId } = this.state;
 
-    // get account nonce
-    const nonceRes = await apiGetAccountNonce(address, network);
-    const nonce = nonceRes.data.result;
+    if (!webConnector) {
+      return;
+    }
 
-    // get current gas prices
-    const gasPriceRes = await apiGetGasPrices();
-    const gasPrice = divide(gasPriceRes.data.safeLow, 10);
+    // from
+    const from = address;
 
-    // set gas limit
-    const gasLimit = 21000;
+    // to
+    const to = address;
+
+    // nonce
+    const _nonce = await apiGetAccountNonce(address, chainId);
+    const nonce = sanitizeHex(convertStringToHex(_nonce));
+
+    // gasPrice
+    const gasPrices = await apiGetGasPrices();
+    const _gasPrice = gasPrices.slow.price;
+    const gasPrice = sanitizeHex(
+      convertStringToHex(convertAmountToRawNumber(_gasPrice, 9))
+    );
+
+    // gasLimit
+    const _gasLimit = 21000;
+    const gasLimit = sanitizeHex(convertStringToHex(_gasLimit));
+
+    // value
+    const _value = 0;
+    const value = sanitizeHex(convertStringToHex(_value));
+
+    // data
+    const data = "0x";
 
     // test transaction
     const tx = {
-      from: address,
-      to: address,
-      nonce: nonce,
-      gasPrice: sanitizeHex(
-        convertStringToHex(convertAmountToRawNumber(gasPrice, 9))
-      ),
-      gasLimit: sanitizeHex(convertStringToHex(gasLimit)),
-      value: "0x00",
-      data: "0x"
+      from,
+      to,
+      nonce,
+      gasPrice,
+      gasLimit,
+      value,
+      data
     };
-
     try {
       // open modal
       this.toggleModal();
@@ -467,7 +482,9 @@ class App extends Component {
           <SContent>
             {!address && !assets.length ? (
               <SLanding center>
-                <h2>{`Try out WalletConnect v${process.env.REACT_APP_VERSION}`}</h2>
+                <h2>{`Try out WalletConnect v${
+                  process.env.REACT_APP_VERSION
+                }`}</h2>
                 <SButtonContainer>
                   <SConnectButton
                     left

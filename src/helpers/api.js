@@ -1,68 +1,40 @@
 import axios from "axios";
 
-/**
- * Configuration for balance api
- * @type axios instance
- */
-const balanceApi = axios.create({
-  baseURL: "https://indexer.balance.io",
+const api = axios.create({
+  baseURL: "https://ethereum-api.xyz",
   timeout: 30000, // 30 secs
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json"
+    Accept: "application/json",
+    "Content-Type": "application/json"
   }
 });
 
-/**
- * @desc get account balances
- * @param  {String}   [address = '']
- * @param  {String}   [network = 'mainnet']
- * @return {Promise}
- */
-export const apiGetAccountBalances = async (
-  address = "",
-  network = "mainnet"
-) => balanceApi.get(`/get_balances/${network}/${address}`);
+export async function apiGetAccountAssets(address, chainId) {
+  const response = await api.get(
+    `/account-assets?address=${address}&chainId=${chainId}`
+  );
+  const { result } = response.data;
+  return result;
+}
 
-/**
- * @desc get account transactions
- * @param  {String}   [address = '']
- * @param  {String}   [network = 'mainnet']
- * @param  {Number}   [page = 1]
- * @return {Promise}
- */
-export const apiGetAccountTransactions = (
-  address = "",
-  network = "mainnet",
-  page = 1
-) => balanceApi.get(`/get_transactions/${network}/${address}/${page}`);
+export async function apiGetAccountTransactions(address, chainId) {
+  const response = await api.get(
+    `/account-transactions?address=${address}&chainId=${chainId}`
+  );
+  const { result } = response.data;
+  return result;
+}
 
-/**
- * @desc get transaction details
- * @param  {String}   [txnHash = '']
- * @param  {String}   [network = 'mainnet']
- * @return {Promise}
- */
-export const apiGetTransactionDetails = (txnHash = "", network = "mainnet") =>
-  balanceApi.get(`/get_transaction/${network}/${txnHash}`);
+export const apiGetAccountNonce = async (address, chainId) => {
+  const response = await api.get(
+    `/account-nonce?address=${address}&chainId=${chainId}`
+  );
+  const { result } = response.data;
+  return result;
+};
 
-/**
- * @desc get ethereum gas prices
- * @return {Promise}
- */
-export const apiGetGasPrices = () =>
-  axios.get(`https://ethgasstation.info/json/ethgasAPI.json`);
-
-/**
- * @desc get account nonce
- * @param  {String}   [address = '']
- * @param  {String}   [network = 'mainnet']
- * @return {Promise}
- */
-export const apiGetAccountNonce = (address = "", network = "mainnet") =>
-  axios.post(`https://${network}.infura.io/`, {
-    jsonrpc: "2.0",
-    id: Date.now(),
-    method: "eth_getTransactionCount",
-    params: [address, "pending"]
-  });
+export const apiGetGasPrices = async () => {
+  const response = await api.get(`/gas-prices`);
+  const { result } = response.data;
+  return result;
+};
