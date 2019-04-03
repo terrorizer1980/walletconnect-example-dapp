@@ -27,14 +27,31 @@ const SModal = styled.div<IModalStyleProps>`
   align-items: center;
 `;
 
+const SContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SHitbox = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`;
+
 interface ICloseButtonStyleProps {
   size: number;
   color: string;
   onClick?: any;
 }
 
-const SCloseButtonStyleTypes = styled.div<ICloseButtonStyleProps>``;
-const SCloseButton = styled(SCloseButtonStyleTypes)`
+const SCloseButton = styled.div<ICloseButtonStyleProps>`
   transition: ${transitions.short};
   position: absolute;
   width: ${({ size }) => `${size}px`};
@@ -85,10 +102,13 @@ const Modal = (props: IModalProps) => {
   const { children, show, toggleModal } = props;
   return (
     <SModal show={show} {...props}>
-      <SCard>
-        <SCloseButton size={25} color={"dark"} onClick={toggleModal} />
-        <div>{children}</div>
-      </SCard>
+      <SContainer>
+        <SHitbox onClick={toggleModal} />
+        <SCard>
+          <SCloseButton size={25} color={"dark"} onClick={toggleModal} />
+          <div>{children}</div>
+        </SCard>
+      </SContainer>
     </SModal>
   );
 };

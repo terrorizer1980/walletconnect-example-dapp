@@ -9,6 +9,7 @@ import Wrapper from "./components/Wrapper";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
 import Loader from "./components/Loader";
+// import Web3Connect from "./components/Web3Connect";
 import { fonts } from "./styles";
 import {
   apiGetAccountAssets,
@@ -45,18 +46,18 @@ const SLanding = styled(Column)`
   height: 600px;
 `;
 
-const SButtonContainer = styled(Column)`
-  width: 250px;
-  margin: 50px 0;
-`;
+// const SButtonContainer = styled(Column)`
+//   width: 250px;
+//   margin: 50px 0;
+// `;
 
-const SConnectButton = styled(Button)`
-  border-radius: 8px;
-  font-size: ${fonts.size.medium};
-  height: 44px;
-  width: 100%;
-  margin: 12px 0;
-`;
+// const SConnectButton = styled(Button)`
+//   border-radius: 8px;
+//   font-size: ${fonts.size.medium};
+//   height: 44px;
+//   width: 100%;
+//   margin: 12px 0;
+// `;
 
 const SContainer = styled.div`
   height: 100%;
@@ -518,7 +519,15 @@ class App extends React.Component<any, any> {
                   <br />
                   <span>{`v${process.env.REACT_APP_VERSION}`}</span>
                 </h3>
-                <SButtonContainer>
+                {/* <Web3Connect
+                  onConnect={(provider: any) => {
+                    console.log("[Web3Connect] onConnect", provider); // tslint:disable-line
+                  }}
+                  onClose={() => {
+                    console.log("[Web3Connect] onClose"); // tslint:disable-line
+                  }}
+                /> */}
+                {/* <SButtonContainer>
                   <SConnectButton
                     left
                     onClick={this.walletConnectInit}
@@ -526,7 +535,7 @@ class App extends React.Component<any, any> {
                   >
                     {"Connect to WalletConnect"}
                   </SConnectButton>
-                </SButtonContainer>
+                </SButtonContainer> */}
               </SLanding>
             ) : (
               <SBalances>
