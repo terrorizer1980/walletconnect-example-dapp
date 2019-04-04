@@ -42,7 +42,7 @@ const SIcon = styled.div`
   position: absolute;
   height: 28px;
   width: 28px;
-  margin-left: 32px;
+  margin-left: 13.1%;
   top: calc((100% - 28px) / 2);
 `;
 
@@ -63,7 +63,7 @@ const SButton = styled.button<IButtonStyleProps>`
   height: 48px;
   width: 100%;
   margin: 0 auto;
-  padding: ${({ icon }) => (icon ? "8px 12px 7px 42px" : "8px 12px")};
+  padding: ${({ icon }) => (icon ? "8px 5% 7px 17.2%" : "8px 12px")};
   cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};
   will-change: transform;
 

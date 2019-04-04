@@ -3,7 +3,7 @@ import styled from "styled-components";
 import * as PropTypes from "prop-types";
 import Blockie from "./Blockie";
 import Banner from "./Banner";
-import WalletConnect from "./WalletConnect/index";
+// import WalletConnect from "./WalletConnect/index";
 import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { transitions } from "../styles";
 
@@ -102,14 +102,14 @@ const Header = (props: IHeaderProps) => {
           </SDisconnect>
         </SActiveAccount>
       )}
-      <WalletConnect
+      {/* <WalletConnect
         onConnect={(provider: any) => {
           console.log("[WalletConnect] onConnect", provider); // tslint:disable-line
         }}
         onClose={() => {
           console.log("[WalletConnect] onClose"); // tslint:disable-line
         }}
-      />
+      /> */}
     </SHeader>
   );
 };

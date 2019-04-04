@@ -516,8 +516,8 @@ class App extends React.Component<any, any> {
               <SLanding center>
                 <h3>
                   {`Try out WalletConnect`}
-                  <br />
-                  <span>{`v${process.env.REACT_APP_VERSION}`}</span>
+                  {/* <br />
+                  <span>{`v${process.env.REACT_APP_VERSION}`}</span> */}
                 </h3>
                 <WalletConnectWidget
                   onConnect={(provider: any) => {
