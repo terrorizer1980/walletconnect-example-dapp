@@ -1,36 +1,15 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
 import styled from "styled-components";
-import Web3ConnectButton from "./Web3ConnectButton";
-
-const SWeb3ConnectButtonContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 250px;
-  margin: 50px 0;
-`;
-
-const SWeb3ConnectButton = styled(Web3ConnectButton)`
-  border-radius: 8px;
-  font-size: 16px;
-  height: 44px;
-  width: 100%;
-  margin: 12px 0;
-`;
+import WalletConnectLogo from "./assets/walletconnect.svg";
+import Button from "./Button";
 
 interface IWeb3ConnectStyleProps {
   show: boolean;
 }
 
-const SWeb3ConnectLightbox = styled.div<IWeb3ConnectStyleProps>`
-  transition: all 0.1s ease-in-out;
+const SLightbox = styled.div<IWeb3ConnectStyleProps>`
+  transition: opacity 0.1s ease-in-out;
   text-align: center;
   position: absolute;
   width: 100vw;
@@ -49,7 +28,7 @@ const SWeb3ConnectLightbox = styled.div<IWeb3ConnectStyleProps>`
   align-items: center;
 `;
 
-const SWeb3ConnectModalContainer = styled.div`
+const SModalContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -59,7 +38,7 @@ const SWeb3ConnectModalContainer = styled.div`
   justify-content: center;
 `;
 
-const SWeb3ConnectHitbox = styled.div`
+const SHitbox = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -67,7 +46,7 @@ const SWeb3ConnectHitbox = styled.div`
   bottom: 0;
 `;
 
-const SWeb3ConnectModal = styled.div`
+const SModalCard = styled.div`
   position: relative;
   width: 100%;
   max-width: 500px;
@@ -90,7 +69,7 @@ interface IWeb3ConnectState {
 }
 
 const INITIAL_STATE: IWeb3ConnectState = {
-  show: true
+  show: false
 };
 
 class Web3Connect extends React.Component<
@@ -124,19 +103,19 @@ class Web3Connect extends React.Component<
     const { show } = this.state;
     return (
       <React.Fragment>
-        <SWeb3ConnectButtonContainer>
-          <SWeb3ConnectButton onClick={this.toggleModal}>
-            {"Web3Connect"}
-          </SWeb3ConnectButton>
-        </SWeb3ConnectButtonContainer>
-        <SWeb3ConnectLightbox show={show}>
-          <SWeb3ConnectModalContainer>
-            <SWeb3ConnectHitbox onClick={this.onClose} />
-            <SWeb3ConnectModal>
-              <div>{`Modal`}</div>
-            </SWeb3ConnectModal>
-          </SWeb3ConnectModalContainer>
-        </SWeb3ConnectLightbox>
+        <Button icon={WalletConnectLogo} onClick={this.toggleModal}>
+          {"WalletConnect"}
+        </Button>
+
+        <SLightbox show={show}>
+          <SModalContainer>
+            <SHitbox onClick={this.onClose} />
+            <SModalCard>
+              <div>{`Metamask`}</div>
+              <div>{`WalletConnect`}</div>
+            </SModalCard>
+          </SModalContainer>
+        </SLightbox>
       </React.Fragment>
     );
   };

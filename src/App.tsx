@@ -9,7 +9,7 @@ import Wrapper from "./components/Wrapper";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
 import Loader from "./components/Loader";
-// import Web3Connect from "./components/Web3Connect";
+import WalletConnectWidget from "./components/WalletConnect/index";
 import { fonts } from "./styles";
 import {
   apiGetAccountAssets,
@@ -519,14 +519,14 @@ class App extends React.Component<any, any> {
                   <br />
                   <span>{`v${process.env.REACT_APP_VERSION}`}</span>
                 </h3>
-                {/* <Web3Connect
+                <WalletConnectWidget
                   onConnect={(provider: any) => {
-                    console.log("[Web3Connect] onConnect", provider); // tslint:disable-line
+                    console.log("[WalletConnectWidget] onConnect", provider); // tslint:disable-line
                   }}
                   onClose={() => {
-                    console.log("[Web3Connect] onClose"); // tslint:disable-line
+                    console.log("[WalletConnectWidget] onClose"); // tslint:disable-line
                   }}
-                /> */}
+                />
                 {/* <SButtonContainer>
                   <SConnectButton
                     left

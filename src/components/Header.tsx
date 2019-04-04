@@ -3,7 +3,7 @@ import styled from "styled-components";
 import * as PropTypes from "prop-types";
 import Blockie from "./Blockie";
 import Banner from "./Banner";
-import Web3Connect from "./Web3Connect/index";
+import WalletConnect from "./WalletConnect/index";
 import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { transitions } from "../styles";
 
@@ -102,12 +102,12 @@ const Header = (props: IHeaderProps) => {
           </SDisconnect>
         </SActiveAccount>
       )}
-      <Web3Connect
+      <WalletConnect
         onConnect={(provider: any) => {
-          console.log("[Web3Connect] onConnect", provider); // tslint:disable-line
+          console.log("[WalletConnect] onConnect", provider); // tslint:disable-line
         }}
         onClose={() => {
-          console.log("[Web3Connect] onClose"); // tslint:disable-line
+          console.log("[WalletConnect] onClose"); // tslint:disable-line
         }}
       />
     </SHeader>

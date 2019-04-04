@@ -1,8 +1,21 @@
 import * as React from "react";
 import styled from "styled-components";
 
+const SButtonContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 244px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 interface IButtonStyleProps {
   disabled: boolean;
+  icon?: any;
 }
 
 interface IButtonProps extends IButtonStyleProps {
@@ -25,6 +38,14 @@ const SHoverLayer = styled.div`
   visibility: hidden;
 `;
 
+const SIcon = styled.div`
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  margin-left: 32px;
+  top: calc((100% - 28px) / 2);
+`;
+
 const SButton = styled.button<IButtonStyleProps>`
   transition: all 0.15s ease-in-out;
   position: relative;
@@ -36,15 +57,18 @@ const SButton = styled.button<IButtonStyleProps>`
   color: rgb(255, 255, 255);
   box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
     0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
+  border-radius: 32px;
   font-size: 16px;
   font-weight: 600;
-  padding: 8px 12px;
+  height: 48px;
+  width: 100%;
+  margin: 0 auto;
+  padding: ${({ icon }) => (icon ? "8px 12px 7px 42px" : "8px 12px")};
   cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};
   will-change: transform;
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.7;
     box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
       0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
   }
@@ -69,18 +93,41 @@ const SButton = styled.button<IButtonStyleProps>`
     box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
       0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
     color: rgba(255, 255, 255, 0.7);
+
+    & ${SIcon} {
+      opacity: 0.7;
+    }
+  }
+
+  & ${SIcon} {
+    right: auto;
+    left: 0;
+    display: ${({ icon }) => (icon ? "block" : "none")};
+    mask: ${({ icon }) => (icon ? `url(${icon}) center no-repeat` : "none")};
+    mask-size: 100%;
+    background-color: rgb(255, 255, 255);
+    transition: 0.15s ease;
   }
 `;
 
 const Button = (props: IButtonProps) => (
-  <SButton type="button" disabled={props.disabled} {...props}>
-    <SHoverLayer />
-    {props.children}
-  </SButton>
+  <SButtonContainer>
+    <SButton
+      type="button"
+      disabled={props.disabled}
+      icon={props.icon}
+      {...props}
+    >
+      <SHoverLayer />
+      <SIcon />
+      {props.children}
+    </SButton>
+  </SButtonContainer>
 );
 
 Button.defaultProps = {
-  disabled: false
+  disabled: false,
+  icon: null
 };
 
 export default Button;
