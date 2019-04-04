@@ -1,4 +1,10 @@
 import MetaMaskLogo from "../assets/metamask.svg";
+import Trustlogo from "../assets/wallets/trust.png";
+import CoinbaseLogo from "../assets/wallets/coinbase.png";
+import CipherLogo from "../assets/wallets/cipher.png";
+import imTokenLogo from "../assets/wallets/imtoken.png";
+import StatusLogo from "../assets/wallets/status.png";
+import TokenaryLogo from "../assets/wallets/tokenary.png";
 
 declare global {
   // tslint:disable-next-line
@@ -16,32 +22,32 @@ export const web3ProvidersList = [
   },
   {
     name: "Trust",
-    logo: null,
+    logo: Trustlogo,
     check: "isTrust"
   },
   {
     name: "Coinbase",
-    logo: null,
+    logo: CoinbaseLogo,
     check: "isToshi"
   },
   {
     name: "Cipher",
-    logo: null,
+    logo: CipherLogo,
     check: "isCipher"
   },
   {
     name: "imToken",
-    logo: null,
+    logo: imTokenLogo,
     check: "isImToken"
   },
   {
     name: "Status",
-    logo: null,
+    logo: StatusLogo,
     check: "isStatus"
   },
   {
     name: "Tokenary",
-    logo: null,
+    logo: TokenaryLogo,
     check: "isTokenary"
   }
 ];

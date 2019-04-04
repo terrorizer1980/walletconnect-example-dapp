@@ -93,8 +93,10 @@ const SWallet = styled.div`
   align-items: center;
   flex-direction: column;
   cursor: pointer;
-  &:hover ${SWalletContainer} {
-    background-color: rgba(195, 195, 195, 0.14);
+  @media (hover: hover) {
+    &:hover ${SWalletContainer} {
+      background-color: rgba(195, 195, 195, 0.14);
+    }
   }
 `;
 
@@ -102,6 +104,7 @@ const SWalletIcon = styled.div`
   width: 45px;
   height: 45px;
   display: flex;
+  border-radius: 50%;
   justify-content: center;
   align-items: center;
   & img {
