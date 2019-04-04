@@ -5,7 +5,11 @@ import WalletConnectLogo from "./assets/walletconnect.svg";
 import QRCodeIcon from "./assets/qrcode.svg";
 import Web3DefaultLogo from "./assets/web3-default.svg";
 import Button from "./Button";
-import { getWeb3ProviderInfo, checkInjectedWeb3Provider } from "./utils";
+import {
+  getWeb3ProviderInfo,
+  checkInjectedWeb3Provider,
+  isMobile
+} from "./utils";
 
 interface IWalletConnectStyleProps {
   show: boolean;
@@ -232,15 +236,17 @@ class WalletConnect extends React.Component<
                   <SSeparator />
                 </React.Fragment>
               )}
-              <SWallet>
-                <SWalletContainer>
-                  <SWalletIcon>
-                    <img src={QRCodeIcon} alt="Mobile Wallet" />
-                  </SWalletIcon>
-                  <SWalletTitle>{`Mobile Wallet`}</SWalletTitle>
-                  <SWalletDescription>{`Scan with your Mobile Wallet to connect`}</SWalletDescription>
-                </SWalletContainer>
-              </SWallet>
+              {!(injectedWeb3Provider && isMobile()) && (
+                <SWallet>
+                  <SWalletContainer>
+                    <SWalletIcon>
+                      <img src={QRCodeIcon} alt="Mobile Wallet" />
+                    </SWalletIcon>
+                    <SWalletTitle>{`Mobile Wallet`}</SWalletTitle>
+                    <SWalletDescription>{`Scan with your Mobile Wallet to connect`}</SWalletDescription>
+                  </SWalletContainer>
+                </SWallet>
+              )}
             </SModalCard>
           </SModalContainer>
         </SLightbox>
