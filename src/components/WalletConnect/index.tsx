@@ -100,11 +100,20 @@ const SWallet = styled.div`
   }
 `;
 
-const SWalletIcon = styled.div`
+interface IWalletIconStyleProps {
+  isMetaMask?: boolean;
+}
+
+const SWalletIcon = styled.div<IWalletIconStyleProps>`
   width: 45px;
   height: 45px;
   display: flex;
   border-radius: 50%;
+  overflow: ${({ isMetaMask }) => (isMetaMask ? "visible" : "hidden")};
+  box-shadow: ${({ isMetaMask }) =>
+    isMetaMask
+      ? "none"
+      : "0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)"};
   justify-content: center;
   align-items: center;
   & img {
@@ -191,7 +200,7 @@ class WalletConnect extends React.Component<
         result = (
           <SWallet>
             <SWalletContainer>
-              <SWalletIcon>
+              <SWalletIcon isMetaMask={web3ProviderInfo.check === "isMetaMask"}>
                 <img
                   src={web3ProviderInfo.logo || Web3DefaultLogo}
                   alt={web3ProviderInfo.name}
