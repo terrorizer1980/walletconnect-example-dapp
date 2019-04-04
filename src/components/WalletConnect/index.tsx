@@ -2,9 +2,10 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import WalletConnectLogo from "./assets/walletconnect.svg";
-import MetamaskLogo from "./assets/metamask.svg";
 import QRCodeIcon from "./assets/qrcode.svg";
+import Web3DefaultLogo from "./assets/web3-default.svg";
 import Button from "./Button";
+import { getWeb3ProviderInfo, checkInjectedWeb3Provider } from "./utils";
 
 interface IWalletConnectStyleProps {
   show: boolean;
@@ -131,10 +132,12 @@ interface IWalletConnectProps {
 
 interface IWalletConnectState {
   show: boolean;
+  injectedWeb3Provider: any;
 }
 
 const INITIAL_STATE: IWalletConnectState = {
-  show: false
+  show: false,
+  injectedWeb3Provider: null
 };
 
 class WalletConnect extends React.Component<
@@ -147,7 +150,8 @@ class WalletConnect extends React.Component<
     onClose: PropTypes.func.isRequired
   };
   public state: IWalletConnectState = {
-    ...INITIAL_STATE
+    ...INITIAL_STATE,
+    injectedWeb3Provider: checkInjectedWeb3Provider()
   };
 
   public toggleModal = async () => {
@@ -171,8 +175,36 @@ class WalletConnect extends React.Component<
     this.props.onClose();
   };
 
+  public renderInjectedWeb3Provider = () => {
+    let result = null;
+    const { injectedWeb3Provider } = this.state;
+    if (injectedWeb3Provider) {
+      const web3ProviderInfo = getWeb3ProviderInfo(injectedWeb3Provider);
+      if (web3ProviderInfo) {
+        result = (
+          <SWallet>
+            <SWalletContainer>
+              <SWalletIcon>
+                <img
+                  src={web3ProviderInfo.logo || Web3DefaultLogo}
+                  alt={web3ProviderInfo.name}
+                />
+              </SWalletIcon>
+              <SWalletTitle>{web3ProviderInfo.name}</SWalletTitle>
+              <SWalletDescription>{`Connect to your ${
+                web3ProviderInfo.name
+              } Wallet`}</SWalletDescription>
+            </SWalletContainer>
+          </SWallet>
+        );
+      }
+    }
+
+    return result;
+  };
+
   public render = () => {
-    const { show } = this.state;
+    const { show, injectedWeb3Provider } = this.state;
     const { lightboxOpacity } = this.props;
     let lightboxOffset = 0;
     if (this.lightboxRef) {
@@ -194,16 +226,12 @@ class WalletConnect extends React.Component<
           <SModalContainer>
             <SHitbox onClick={this.onClose} />
             <SModalCard>
-              <SWallet>
-                <SWalletContainer>
-                  <SWalletIcon>
-                    <img src={MetamaskLogo} alt="MetaMask" />
-                  </SWalletIcon>
-                  <SWalletTitle>{`MetaMask`}</SWalletTitle>
-                  <SWalletDescription>{`Connect to you MetaMask extension`}</SWalletDescription>
-                </SWalletContainer>
-              </SWallet>
-              <SSeparator />
+              {!!injectedWeb3Provider && (
+                <React.Fragment>
+                  {this.renderInjectedWeb3Provider()}
+                  <SSeparator />
+                </React.Fragment>
+              )}
               <SWallet>
                 <SWalletContainer>
                   <SWalletIcon>
