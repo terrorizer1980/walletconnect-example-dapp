@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import WalletConnect from "@walletconnect/browser";
+import WalletConnect from "./walletconnect/index";
 import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 import { IInternalEvent } from "@walletconnect/types";
 import Button from "./components/Button";

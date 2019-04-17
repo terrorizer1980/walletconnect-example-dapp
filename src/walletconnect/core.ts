@@ -1092,6 +1092,10 @@ class Connector {
   private async _socketReceive(event: MessageEvent) {
     let socketMessage: ISocketMessage;
 
+    if (event.data === "pong") {
+      return;
+    }
+
     try {
       socketMessage = JSON.parse(event.data);
     } catch (error) {
