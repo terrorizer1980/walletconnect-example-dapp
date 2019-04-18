@@ -107,7 +107,7 @@ class Connector {
 
     if (!opts.bridge && !opts.uri && !opts.session) {
       throw new Error(
-        "Missing one of two required parameters: bridge / uri / session"
+        "Missing one of the required parameters: bridge / uri / session"
       );
     }
 
@@ -138,8 +138,8 @@ class Connector {
 
     this._socket = new SocketTransport({
       bridge: this.bridge,
-      clientId: this.clientId,
-      callback: this._handleIncomingMessages
+      callback: (socketMessage: ISocketMessage) =>
+        this._handleIncomingMessages(socketMessage)
     });
 
     this._subscribeToInternalEvents();
@@ -224,9 +224,7 @@ class Connector {
     return this._peerId;
   }
 
-  set clientMeta(value) {
-    // something
-  }
+  set clientMeta(value) {}
 
   get clientMeta() {
     let clientMeta: IClientMeta | null = this._clientMeta;
@@ -300,17 +298,13 @@ class Connector {
     return accounts;
   }
 
-  set connected(value) {
-    // something
-  }
+  set connected(value) {}
 
   get connected() {
     return this._connected;
   }
 
-  set pending(value) {
-    // something
-  }
+  set pending(value) {}
 
   get pending() {
     return !!this._handshakeTopic;
@@ -738,7 +732,7 @@ class Connector {
       });
     }
     this._removeStorageSession();
-    this._socket.togglePing();
+    this._socket.close();
   }
 
   private _handleSessionResponse(
@@ -831,7 +825,7 @@ class Connector {
   }
 
   private _subscribeToSessionRequest() {
-    this._socket.setToQueue({
+    this._socket.queue({
       topic: `${this.handshakeTopic}`,
       type: "sub",
       payload: ""
@@ -888,8 +882,6 @@ class Connector {
       this.peerId = payload.params[0].peerId;
       this.peerMeta = payload.params[0].peerMeta;
 
-      // this._exchangeKey()
-
       const internalPayload = {
         ...payload,
         method: "session_request"
@@ -903,68 +895,11 @@ class Connector {
       }
       this._handleSessionResponse("Session disconnected", payload.params[0]);
     });
-
-    this.on("wc_exchangeKey", (error, payload) => {
-      if (error) {
-        this._eventManager.trigger({
-          event: "error",
-          params: [
-            {
-              code: "EXCHANGE_KEY_ERROR",
-              message: error.toString()
-            }
-          ]
-        });
-      }
-      this._handleExchangeKeyRequest(payload);
-    });
   }
 
   // -- keyManager ------------------------------------------------------- //
 
-  // private async _exchangeKey () {
-  //   this._nextKey = await this._generateKey()
-
-  //   const request: IJsonRpcRequest = this._formatRequest({
-  //     method: 'wc_exchangeKey',
-  //     params: [
-  //       {
-  //         peerId: this.clientId,
-  //         peerMeta: this.clientMeta,
-  //         nextKey: this.nextKey
-  //       }
-  //     ]
-  //   })
-
-  //   try {
-  //     await this._sendCallRequest(request)
-  //     this._swapKey()
-  //   } catch (error) {
-  //     throw error
-  //   }
-  // }
-
-  private async _handleExchangeKeyRequest(payload: IJsonRpcRequest) {
-    const { peerId, peerMeta, nextKey } = payload.params[0];
-    this.peerId = peerId;
-    this.peerMeta = peerMeta;
-    this.nextKey = nextKey;
-    const response = {
-      id: payload.id,
-      jsonrpc: "2.0",
-      result: true
-    };
-    await this._sendResponse(response);
-    this._swapKey();
-  }
-
-  private _swapKey() {
-    this._key = this._nextKey;
-    this._nextKey = null;
-    if (this._connected) {
-      this._setStorageSession();
-    }
-  }
+  // TODO: Refactor with new exchange key flow
 
   // -- uri ------------------------------------------------------------- //
 
