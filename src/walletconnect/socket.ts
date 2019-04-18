@@ -58,9 +58,13 @@ class SocketTransport {
     this._setToQueue(socketMessage);
   }
 
+  public pushIncoming() {
+    this._pushIncoming();
+  }
+
   public close() {
     if (this._socket && this._socket.readyState === 1) {
-      this._toggleSocketPing();
+      clearInterval(this._pingInterval);
       this._socket.close();
     }
   }
@@ -88,7 +92,6 @@ class SocketTransport {
       }
 
       this._pushQueue();
-      this._pushIncoming();
       this._toggleSocketPing();
     };
   }
@@ -97,7 +100,7 @@ class SocketTransport {
     if (this._socket && this._socket.readyState === 1) {
       this._pingInterval = setInterval(
         () => {
-          if (this._socket) {
+          if (this._socket && this._socket.readyState === 1) {
             this._socket.send("ping");
           }
         },
@@ -135,6 +138,7 @@ class SocketTransport {
     } catch (error) {
       throw error;
     }
+
     if (this._socket && this._socket.readyState === 1) {
       this._callback(socketMessage);
     } else {
