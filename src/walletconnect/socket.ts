@@ -23,7 +23,9 @@ class SocketTransport {
     this._queue = [];
     this._incoming = [];
     this._pingInterval = null;
-    this._callback = () => {};
+    this._callback = () => {
+      // empty
+    };
 
     if (opts.bridge && typeof opts.bridge !== "string") {
       throw new Error("Missing or invalid bridge field");
