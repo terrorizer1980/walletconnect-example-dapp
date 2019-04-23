@@ -88,8 +88,6 @@ class EventManager {
         const error = new Error(payload.error.message);
         eventEmitter.callback(error, null);
       } else {
-        console.log("trigger eventEmitter.event", eventEmitter.event); // tslint:disable-line
-        console.log("trigger payload", payload); // tslint:disable-line
         eventEmitter.callback(null, payload);
       }
     });
