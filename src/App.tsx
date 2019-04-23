@@ -156,7 +156,7 @@ class App extends React.Component<any, any> {
 
   public walletConnectInit = async () => {
     // bridge url
-    const bridge = "http://localhost:5001";
+    const bridge = "https://bridge.walletconnect.org";
 
     // create new walletConnector
     const walletConnector = new WalletConnect({ bridge });
