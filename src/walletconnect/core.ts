@@ -497,7 +497,7 @@ class Connector {
     this._manageStorageSession();
   }
 
-  public killSession(sessionError?: ISessionError) {
+  public async killSession(sessionError?: ISessionError) {
     const message = sessionError
       ? sessionError.message
       : "Session Disconnected";
@@ -513,7 +513,7 @@ class Connector {
       params: [sessionParams]
     });
 
-    this._sendSessionRequest(request, "Failed to kill Session");
+    await this._sendRequest(request);
 
     this._handleSessionDisconnect(message);
   }
@@ -655,7 +655,13 @@ class Connector {
     request: Partial<IJsonRpcRequest>,
     _topic?: string
   ) {
+    // tslint:disable-next-line
+    console.log("_sendRequest request", request);
+
     const callRequest: IJsonRpcRequest = this._formatRequest(request);
+
+    // tslint:disable-next-line
+    console.log("_sendRequest callRequest", callRequest);
 
     const encryptionPayload: IEncryptionPayload | null = await this._encrypt(
       callRequest
@@ -697,6 +703,8 @@ class Connector {
     errorMsg: string,
     _topic?: string
   ) {
+    // tslint:disable-next-line
+    console.log("_sendSessionRequest request", request);
     this._sendRequest(request, _topic);
     this._subscribeToSessionResponse(request.id, errorMsg);
   }
@@ -748,6 +756,7 @@ class Connector {
   }
 
   private _handleSessionDisconnect(errorMsg?: string) {
+    console.log("_handleSessionDisconnect"); // tslint:disable-line
     const message = errorMsg || "Session Disconnected";
     if (this._connected) {
       this._connected = false;
@@ -764,6 +773,8 @@ class Connector {
     errorMsg: string,
     sessionParams?: ISessionParams
   ) {
+    // tslint:disable-next-line
+    console.log("_handleSessionResponse sessionParams", sessionParams);
     if (sessionParams) {
       if (sessionParams.approved) {
         if (!this._connected) {
@@ -838,11 +849,17 @@ class Connector {
       throw error;
     }
 
+    // tslint:disable-next-line
+    console.log("_handleIncomingMessages encryptionPayload", encryptionPayload);
+
     const payload:
       | IJsonRpcRequest
       | IJsonRpcResponseSuccess
       | IJsonRpcResponseError
       | null = await this._decrypt(encryptionPayload);
+
+    // tslint:disable-next-line
+    console.log("_handleIncomingMessages payload", payload);
 
     if (payload) {
       this._eventManager.trigger(payload);
