@@ -93,15 +93,6 @@ class Connector {
     this._connected = false;
     this._storage = storage || null;
 
-    if (
-      typeof window !== "undefined" &&
-      typeof window.location !== "undefined" &&
-      window.location.protocol !== "https:" &&
-      window.location.hostname !== "localhost"
-    ) {
-      throw new Error("HTTPS is required for non-localhost origins");
-    }
-
     if (clientMeta) {
       this.clientMeta = clientMeta;
     }
@@ -837,7 +828,6 @@ class Connector {
     } catch (error) {
       throw error;
     }
-
     const payload:
       | IJsonRpcRequest
       | IJsonRpcResponseSuccess
