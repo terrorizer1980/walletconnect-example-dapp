@@ -161,13 +161,14 @@ class WalletConnect extends React.Component<
   IWalletConnectProps,
   IWalletConnectState
 > {
-  public lightboxRef?: HTMLDivElement | null;
-
-  public propTypes = {
+  public static propTypes = {
     onConnect: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     lightboxOpacity: PropTypes.number
   };
+
+  public lightboxRef?: HTMLDivElement | null;
+
   public state: IWalletConnectState = {
     ...INITIAL_STATE,
     injectedWeb3Provider: checkInjectedWeb3Provider()
