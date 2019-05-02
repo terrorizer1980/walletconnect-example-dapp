@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
 import * as PropTypes from "prop-types";
+// import Web3Connect from "web3connect";
 import Blockie from "./Blockie";
 import Banner from "./Banner";
-// import Web3Connect from "./Web3Connect/index";
 import { ellipseAddress, getChainData } from "../helpers/utilities";
 import { transitions } from "../styles";
 

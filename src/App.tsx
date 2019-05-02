@@ -3,13 +3,13 @@ import styled from "styled-components";
 import WalletConnect from "@walletconnect/browser";
 import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 import { IInternalEvent } from "@walletconnect/types";
+import Web3Connect from "web3connect";
 import Button from "./components/Button";
 import Column from "./components/Column";
 import Wrapper from "./components/Wrapper";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
 import Loader from "./components/Loader";
-import Web3Connect from "./components/Web3Connect";
 import { fonts } from "./styles";
 import {
   apiGetAccountAssets,
