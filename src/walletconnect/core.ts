@@ -818,6 +818,8 @@ class Connector {
   private async _handleIncomingMessages(socketMessage: ISocketMessage) {
     const activeTopics = [this.clientId, this.handshakeTopic];
 
+    console.log("socketMessage.topic", socketMessage.topic); // tslint:disable-line
+
     if (!activeTopics.includes(socketMessage.topic)) {
       return;
     }
@@ -828,11 +830,16 @@ class Connector {
     } catch (error) {
       throw error;
     }
+
+    console.log("encryptionPayload", encryptionPayload); // tslint:disable-line
+
     const payload:
       | IJsonRpcRequest
       | IJsonRpcResponseSuccess
       | IJsonRpcResponseError
       | null = await this._decrypt(encryptionPayload);
+
+    console.log("payload", payload); // tslint:disable-line
 
     if (payload) {
       this._eventManager.trigger(payload);
