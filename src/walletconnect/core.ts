@@ -15,6 +15,7 @@ import {
   IWalletConnectOptions
 } from "./types";
 import {
+  parsePersonalSign,
   parseTransactionData,
   convertArrayBufferToHex,
   convertHexToArrayBuffer,
@@ -23,7 +24,6 @@ import {
   uuid,
   formatRpcError,
   parseWalletConnectUri,
-  isHexStrict,
   convertUtf8ToHex
 } from "./utils";
 import SocketTransport from "./socket";
@@ -572,9 +572,7 @@ class Connector {
       throw new Error("Session currently disconnected");
     }
 
-    if (!isHexStrict(params[1])) {
-      params[1] = convertUtf8ToHex(params[1]);
-    }
+    params = parsePersonalSign(params);
 
     const request = this._formatRequest({
       method: "personal_sign",
@@ -610,6 +608,26 @@ class Connector {
   public async sendCustomRequest(request: Partial<IJsonRpcRequest>) {
     if (!this._connected) {
       throw new Error("Session currently disconnected");
+    }
+
+    switch (request.method) {
+      case "eth_accounts":
+        return this.accounts;
+      case "eth_chainId":
+        return convertUtf8ToHex(`${this.chainId}`, true);
+      case "eth_sendTransaction":
+      case "eth_signTransaction":
+        if (request.params) {
+          request.params[0] = parseTransactionData(request.params[0]);
+        }
+        break;
+      case "personal_sign":
+        if (request.params) {
+          request.params = parsePersonalSign(request.params);
+        }
+        break;
+      default:
+        break;
     }
 
     const formattedRequest = this._formatRequest(request);
@@ -818,8 +836,6 @@ class Connector {
   private async _handleIncomingMessages(socketMessage: ISocketMessage) {
     const activeTopics = [this.clientId, this.handshakeTopic];
 
-    console.log("socketMessage.topic", socketMessage.topic); // tslint:disable-line
-
     if (!activeTopics.includes(socketMessage.topic)) {
       return;
     }
@@ -831,15 +847,11 @@ class Connector {
       throw error;
     }
 
-    console.log("encryptionPayload", encryptionPayload); // tslint:disable-line
-
     const payload:
       | IJsonRpcRequest
       | IJsonRpcResponseSuccess
       | IJsonRpcResponseError
       | null = await this._decrypt(encryptionPayload);
-
-    console.log("payload", payload); // tslint:disable-line
 
     if (payload) {
       this._eventManager.trigger(payload);
