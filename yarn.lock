@@ -135,7 +135,7 @@
     "@types/react" "*"
     csstype "^2.2.0"
 
-"@walletconnect/browser@^1.0.0-beta.20":
+"@walletconnect/browser@^1.0.0-beta.22":
   version "1.0.0-beta.22"
   resolved "https://registry.yarnpkg.com/@walletconnect/browser/-/browser-1.0.0-beta.22.tgz#4c8d64cc04a83f6a043ed458c844b701218aca6a"
   integrity sha512-ULDybOLJcK2+kaW4RPCIp7RnO6k7dCgC6S2twZ7xsHmlCBpPqq5Jhs28714CTbqouZ9wL78mfTO3KbReCdjfgA==
@@ -152,7 +152,7 @@
     "@walletconnect/types" "^1.0.0-beta.21"
     "@walletconnect/utils" "^1.0.0-beta.22"
 
-"@walletconnect/qrcode-modal@^1.0.0-beta.20":
+"@walletconnect/qrcode-modal@^1.0.0-beta.22":
   version "1.0.0-beta.22"
   resolved "https://registry.yarnpkg.com/@walletconnect/qrcode-modal/-/qrcode-modal-1.0.0-beta.22.tgz#d6f1a8d4215159d7956c80fbec04e97ce52b0c18"
   integrity sha512-sTxRCHWLBZ+MFhkBWjZvpnJhikeVSE649q3H5e217x9zCPJ4JW7r8xX6e3w6+ocCPEzHk2F0GC+cCyHi/xLflg==
