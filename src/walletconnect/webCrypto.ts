@@ -10,7 +10,8 @@ import {
   convertArrayBufferToHex,
   convertArrayBufferToUtf8,
   convertHexToArrayBuffer,
-  convertUtf8ToArrayBuffer
+  convertUtf8ToArrayBuffer,
+  removeHexPrefix
 } from "./utils";
 
 const AES_ALGORITHM: string = "AES-CBC";
@@ -91,7 +92,7 @@ export async function verifyHmac(
   const chmac: ArrayBuffer = await createHmac(unsigned, key);
   const chmacHex: string = convertArrayBufferToHex(chmac, true);
 
-  if (hmacHex === chmacHex) {
+  if (removeHexPrefix(hmacHex) === removeHexPrefix(chmacHex)) {
     return true;
   }
 
