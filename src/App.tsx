@@ -205,7 +205,7 @@ class App extends React.Component<any, any> {
       return;
     }
 
-    walletConnector.on("session_update", async (error, payload) => {
+    walletConnector.on("session_update", async (error: any, payload: { params: any[] }) => {
       console.log('walletConnector.on("session_update")'); // tslint:disable-line
 
       if (error) {
@@ -216,7 +216,7 @@ class App extends React.Component<any, any> {
       this.onSessionUpdate(accounts, chainId);
     });
 
-    walletConnector.on("connect", (error, payload) => {
+    walletConnector.on("connect", (error: any, payload: IInternalEvent) => {
       console.log('walletConnector.on("connect")'); // tslint:disable-line
 
       if (error) {
@@ -226,7 +226,7 @@ class App extends React.Component<any, any> {
       this.onConnect(payload);
     });
 
-    walletConnector.on("disconnect", (error, payload) => {
+    walletConnector.on("disconnect", (error: any, payload: any) => {
       console.log('walletConnector.on("disconnect")'); // tslint:disable-line
 
       if (error) {
@@ -675,6 +675,61 @@ class App extends React.Component<any, any> {
     }
   };
 
+  public testTrustSignTransaction = async () => {
+    const { walletConnector } = this.state;
+
+    if (!walletConnector) {
+      return;
+    }
+
+    try {
+      const transaction = {
+        "accountNumber": "1035",
+        "chainId": "cosmoshub-2",
+        "fee": {
+          "amounts": [
+            {
+              "denom": "uatom",
+              "amount": "5000"
+            }
+          ],
+          "gas": "200000"
+        },
+        "sequence": "40",
+        "sendCoinsMessage": {
+          "fromAddress": "cosmos135qla4294zxarqhhgxsx0sw56yssa3z0f78pm0",
+          "toAddress": "cosmos1zcax8gmr0ayhw2lvg6wadfytgdhen25wrxunxa",
+          "amounts": [
+            {
+              "denom": "uatom",
+              "amount": "100000"
+            }
+          ]
+        }
+      };
+
+      const result = await walletConnector.trustSignTransaction(118, transaction);
+
+      // format displayed result
+      const formattedResult = {
+        method: "trust_signTransaction",
+        result
+      };
+
+      // display result
+      this.setState({
+        walletConnector,
+        showModal: true,
+        pendingRequest: false,
+        result: formattedResult || null
+      });
+
+    } catch (error) {
+      console.error(error); // tslint:disable-line
+      this.setState({ walletConnector, pendingRequest: false, result: null });
+    }
+  };
+
   public render = () => {
     const {
       assets,
@@ -741,6 +796,10 @@ class App extends React.Component<any, any> {
 
                     <STestButton disabled left onClick={this.testSignTypedData}>
                       {"eth_signTypedData"}
+                    </STestButton>
+
+                    <STestButton left onClick={this.testTrustSignTransaction}>
+                      {"trust_signTransaction"}
                     </STestButton>
                   </STestButtonContainer>
                 </Column>
