@@ -12,13 +12,13 @@ Go to the path you cloned the WalletConnect Trust fork and type:
 cd packages/core && npm install && npm run build && npm link && cd -
 ```
 
-```
+```bash
 cd packages/browser && npm install && npm link @walletconnect/core && npm run build && npm link && cd -
 ```
 
 Go to the directory where you clonned the example app, install the dependencies and type:
 
-```
+```bash
 npm link @walletconnect/core && npm link @walletconnect/core
 ```
 
