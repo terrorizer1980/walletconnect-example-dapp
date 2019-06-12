@@ -2,11 +2,11 @@
 
 ## Before you Start
 This package doesn't use default dependencies, to test Trust specific features you need
-to clone WalletConnect Trust [fork](https://github.com/TrustWallet/walletconnect-monorepo)
+to clone [WalletConnect Trust fork](https://github.com/TrustWallet/walletconnect-monorepo)
 and link the packaged globally:
 
 ### Linking Dependencies
-Go to the path you cloned the WalletConnect Trust fork and type:
+Go to the path you cloned [WalletConnect Trust fork](https://github.com/TrustWallet/walletconnect-monorepo) and type:
 
 ```bash
 cd packages/core && npm install && npm run build && npm link && cd -
