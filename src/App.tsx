@@ -2,36 +2,24 @@ import * as React from "react";
 import styled from "styled-components";
 import WalletConnect from "@walletconnect/browser";
 import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
-import { convertUtf8ToHex } from "@walletconnect/utils";
-import { IInternalEvent, IJsonRpcRequest } from "@walletconnect/types";
+import {convertUtf8ToHex} from "@walletconnect/utils";
+import {IInternalEvent, IJsonRpcRequest} from "@walletconnect/types";
 import Button from "./components/Button";
 import Column from "./components/Column";
 import Wrapper from "./components/Wrapper";
 import Modal from "./components/Modal";
 import Header from "./components/Header";
 import Loader from "./components/Loader";
-import { fonts } from "./styles";
-import {
-  apiGetAccountAssets,
-  apiGetGasPrices,
-  apiGetAccountNonce
-} from "./helpers/api";
+import {fonts} from "./styles";
+import {apiGetAccountAssets, apiGetAccountNonce, apiGetGasPrices} from "./helpers/api";
 // import {
 //   recoverTypedSignature
 // } from "./helpers/ethSigUtil";
-import {
-  sanitizeHex,
-  hashPersonalMessage,
-  recoverPublicKey,
-  recoverPersonalSignature
-} from "./helpers/utilities";
-import {
-  convertAmountToRawNumber,
-  convertStringToHex
-} from "./helpers/bignumber";
-import { IAssetData } from "./helpers/types";
+import {hashPersonalMessage, recoverPersonalSignature, recoverPublicKey, sanitizeHex} from "./helpers/utilities";
+import {convertAmountToRawNumber, convertStringToHex} from "./helpers/bignumber";
+import {IAssetData} from "./helpers/types";
 import Banner from "./components/Banner";
-import AccountAssets from "./components/AccountAssets";
+import Accounts from "./components/Accounts";
 
 const SLayout = styled.div`
   position: relative;
@@ -147,6 +135,7 @@ interface IAppState {
   address: string;
   result: any | null;
   assets: IAssetData[];
+  walletAccounts: any[];
 }
 
 const INITIAL_STATE: IAppState = {
@@ -160,7 +149,8 @@ const INITIAL_STATE: IAppState = {
   accounts: [],
   address: "",
   result: null,
-  assets: []
+  assets: [],
+  walletAccounts: [],
 };
 
 class App extends React.Component<any, any> {
@@ -245,6 +235,7 @@ class App extends React.Component<any, any> {
         accounts,
         address
       });
+      this.getAccounts();
     }
 
     this.setState({ walletConnector });
@@ -272,7 +263,7 @@ class App extends React.Component<any, any> {
       address
     });
     WalletConnectQRCodeModal.close();
-    this.getAccountAssets();
+    this.getAccounts();
   };
 
   public onDisconnect = async () => {
@@ -283,7 +274,7 @@ class App extends React.Component<any, any> {
   public onSessionUpdate = async (accounts: string[], chainId: number) => {
     const address = accounts[0];
     await this.setState({ chainId, accounts, address });
-    await this.getAccountAssets();
+    await this.getAccounts();
   };
 
   public getAccountAssets = async () => {
@@ -297,6 +288,27 @@ class App extends React.Component<any, any> {
     } catch (error) {
       console.error(error); // tslint:disable-line
       await this.setState({ fetching: false });
+    }
+  };
+
+  public getAccounts = async () => {
+    this.setState({ fetching: true });
+    const { walletConnector } = this.state;
+
+    if (!walletConnector) {
+      return;
+    }
+
+    try {
+      const walletAccounts = await walletConnector.getAccounts();
+
+      this.setState({
+        fetching: false,
+        walletAccounts
+      });
+    } catch (error) {
+      console.error(error); // tslint:disable-line
+      this.setState({ fetching: false });
     }
   };
 
@@ -676,33 +688,36 @@ class App extends React.Component<any, any> {
   };
 
   public testTrustSignTransaction = async () => {
-    const { walletConnector } = this.state;
+    const { walletConnector, walletAccounts } = this.state;
+    const cosmosAccount = walletAccounts
+        .filter( account => account.network === 118 )[0];
 
     if (!walletConnector) {
       return;
     }
 
     try {
+      // @ts-ignore
       const transaction = {
-        "accountNumber": "1035",
-        "chainId": "cosmoshub-2",
-        "fee": {
-          "amounts": [
+        accountNumber: "1035",
+        chainId: "cosmoshub-2",
+        fee: {
+          amounts: [
             {
               "denom": "uatom",
               "amount": "5000"
             }
           ],
-          "gas": "200000"
+          gas: "200000"
         },
-        "sequence": "40",
-        "sendCoinsMessage": {
-          "fromAddress": "cosmos135qla4294zxarqhhgxsx0sw56yssa3z0f78pm0",
-          "toAddress": "cosmos1zcax8gmr0ayhw2lvg6wadfytgdhen25wrxunxa",
-          "amounts": [
+        sequence: "40",
+        sendCoinsMessage: {
+          fromAddress: cosmosAccount.address,
+          toAddress: "cosmos1zcax8gmr0ayhw2lvg6wadfytgdhen25wrxunxa",
+          amounts: [
             {
-              "denom": "uatom",
-              "amount": "100000"
+              denom: "uatom",
+              amount: "100000"
             }
           ]
         }
@@ -739,7 +754,8 @@ class App extends React.Component<any, any> {
       fetching,
       showModal,
       pendingRequest,
-      result
+      result,
+      walletAccounts
     } = this.state;
     return (
       <SLayout>
@@ -803,9 +819,9 @@ class App extends React.Component<any, any> {
                     </STestButton>
                   </STestButtonContainer>
                 </Column>
-                <h3>Balances</h3>
+                <h3>Accounts</h3>
                 {!fetching ? (
-                  <AccountAssets chainId={chainId} assets={assets} />
+                  <Accounts accounts={walletAccounts}/>
                 ) : (
                   <Column center>
                     <SContainer>
