@@ -27,14 +27,14 @@
   "dependencies": {
     "@trustwallet/walletconnect": "0.0.10",
     "@walletconnect/qrcode-modal": "^1.0.0-beta.30",
-    "axios": "^0.18.0",
+    "axios": "^0.21.3",
     "bignumber.js": "^8.0.2",
     "ethereumjs-util": "^6.1.0",
     "prop-types": "^15.6.2",
     "qr-image": "^3.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-scripts-ts": "3.1.0",
+    "react-scripts-ts": "4.0.1",
     "styled-components": "4.2.0"
   },
   "devDependencies": {
